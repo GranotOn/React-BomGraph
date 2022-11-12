@@ -7,7 +7,12 @@ import styled from "styled-components";
 // helpers
 import drawGrid from "./bgGrid";
 import drawNode from "./Node";
-import { parseNodes, findIntersection, parseGraphOnHover } from "./utils";
+import {
+  parseNodes,
+  findIntersection,
+  parseGraphOnHover,
+  hexToShade,
+} from "./utils";
 import {
   createEdgesLevelOne,
   createEdgesLevelTwo,
@@ -24,7 +29,7 @@ const EDGE_BATCH = 1;
 
 const sizeObject = {
   0: 15,
-  1: 3,
+  1: 2,
   2: 3,
 };
 
@@ -37,24 +42,7 @@ const StyledCanvas = styled.canvas`
   overflow: hidden;
 `;
 
-var levelOne = getLevelOne(900);
-var levelTwo = getLevelTwo(100);
-
-const edges = [
-  ...createEdgesLevelOne(levelOne),
-  ...createEdgesLevelTwo(levelOne, levelTwo),
-];
-
-levelTwo = levelTwo.map((node) => {
-  const inDeg = edges.reduce(
-    (prev, curr) => (curr.to === node.id ? prev + 1 : prev),
-    0
-  );
-
-  return { ...node, deg: inDeg };
-});
-
-const nodes = [
+var levelZero = [
   {
     id: 0,
     level: 0,
@@ -73,9 +61,31 @@ const nodes = [
     name: "OperatingSystem",
     color: "#8EAD52",
   },
-  ...levelOne,
-  ...levelTwo,
 ];
+var levelOne = getLevelOne(900);
+var levelTwo = getLevelTwo(100);
+
+const edges = [
+  ...createEdgesLevelOne(levelOne),
+  ...createEdgesLevelTwo(levelOne, levelTwo),
+];
+
+levelOne = levelOne.map((node) => {
+  const edge = edges.find((edge) => edge.to === node.id);
+  const type = levelZero.find((n) => n.id === edge.from);
+  return { ...node, color: hexToShade(type.color) };
+});
+
+levelTwo = levelTwo.map((node) => {
+  const inDeg = edges.reduce(
+    (prev, curr) => (curr.to === node.id ? prev + 1 : prev),
+    0
+  );
+
+  return { ...node, deg: inDeg };
+});
+
+const nodes = [...levelZero, ...levelOne, ...levelTwo];
 
 export default function BomGraph() {
   const canvas = useRef(null);

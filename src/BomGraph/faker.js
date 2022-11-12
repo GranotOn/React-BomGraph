@@ -1,21 +1,28 @@
 import { faker } from "@faker-js/faker";
-import { getRandomColor } from "./utils";
+import { hexToShade } from "./utils";
+
+const levelTwoColors = {
+  version: "#628395",
+  author: "#96897B",
+  license: "#D0CE7C",
+};
 
 export function createRandomLevelOne() {
   return {
     id: faker.datatype.uuid(),
     name: faker.internet.userName(),
-    color: faker.color.rgb(),
+    color: hexToShade("#F07AC1"),
     level: 1,
   };
 }
 
-export function createRandomLevelTwo() {
+export function createRandomLevelTwo(type) {
   return {
     id: faker.datatype.uuid(),
     name: faker.internet.userName(),
-    color: faker.color.rgb(),
+    color: hexToShade(levelTwoColors[type]),
     level: 2,
+    type: type,
   };
 }
 
@@ -57,4 +64,15 @@ export const getLevelOne = (count) =>
   Array.from({ length: count }).map(() => createRandomLevelOne());
 
 export const getLevelTwo = (count) =>
-  Array.from({ length: count }).map(() => createRandomLevelTwo());
+  Array.from({ length: count / 3 })
+    .map(() => createRandomLevelTwo("version"))
+    .concat(
+      Array.from({ length: count / 3 }).map(() =>
+        createRandomLevelTwo("author")
+      )
+    )
+    .concat(
+      Array.from({ length: count / 3 }).map(() =>
+        createRandomLevelTwo("license")
+      )
+    );

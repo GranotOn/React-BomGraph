@@ -3,8 +3,8 @@ export default function drawEdge(context, edge, fromNode, toNode) {
   context.bezierCurveTo(
     fromNode.x - 50,
     fromNode.y - 50,
-    toNode.x + Math.abs(toNode.x - fromNode.x) / 2,
-    toNode.y - 30,
+    toNode.x,
+    toNode.y + 30,
     toNode.x,
     toNode.y
   );
@@ -21,7 +21,7 @@ export default function drawEdge(context, edge, fromNode, toNode) {
     context.lineWidth = 0.5;
     context.shadowColor = fromNode.color;
   } else {
-    context.setLineDash([1, 1]);
+    context.setLineDash([1, 4]);
     context.lineWidth = 0.1;
   }
   gradient.addColorStop(0, fromNode.color);
