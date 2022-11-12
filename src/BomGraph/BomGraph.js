@@ -20,6 +20,7 @@ import {
   getLevelTwo,
 } from "./faker";
 import drawEdge from "./Edge";
+import drawUI from "./UI";
 
 // consts
 const SCROLL_SENSITIVITY = 0.0005;
@@ -184,6 +185,8 @@ export default function BomGraph() {
     } else {
       context.drawImage(canvas.current.hoverCanvas, 0, 0);
     }
+
+    drawUI(context, graph.current);
 
     graph.current.nodes.forEach((node) => drawNode(context, node, sizeObject));
     context.fillColor = "red";
